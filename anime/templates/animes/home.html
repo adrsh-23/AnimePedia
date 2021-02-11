@@ -1,0 +1,225 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Langar&family=Russo+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Langar&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimePedia</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(12,122,84,1) 53%, rgba(0,228,255,1) 100%);">
+        &nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a class="navbar-brand" href="{% url 'home_page' %}" style="color:azure; font-family: 'Bungee', cursive;">AnimePedia</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <form class="form-inline my-2 my-lg-0" name="search">
+            <input class="form-control mr-sm-2 " type="search" placeholder="Search for Anime" name="query">
+            <input type="submit" class="btn btn-success " value="Search">
+        </form>
+        {%if user.is_authenticated and request.user.is_superuser or user.is_authenticated and request.user == task.user%}
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a class="btn btn-primary" href="{%url 'create_page'%}" style="float:right;">Add New Anime</a>
+        {%endif%}
+        &nbsp;&nbsp;&nbsp;
+        <a class="btn btn-info" href="{%url 'sortAnime' type='Name'%}">Order By Name</a>
+        {%if user.is_authenticated%}
+        <a href="{%url 'logout'%}" class="btn btn-danger ml-auto">Logout</a>
+        {%else%}
+            <div class="ml-auto">
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#loginsignup">
+                    Login/Register
+                </button>
+            </div>
+        {%endif%}
+    </nav>
+    {% for msg in messages %}
+    <div class="alert alert-{{msg.tags}} alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>{{msg}}</strong>
+    </div>
+    {%endfor%}
+    <div class="row">
+        {%for anime in search_result %}
+        <div class="card shadow-lg p-3 mb-5 bg-white rounded"
+            style="width:23rem;margin-bottom:30px;margin-left:6px;margin-right:6px; display:flex;">
+            <img src="{{anime.fields.Image.0.url}}" height="400px" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title" style="font-family: 'Russo One', sans-serif;">{{anime.fields.Name}}</h5>
+                <h6>{{anime.fields.Rating}} <img src="https://img.icons8.com/fluent/50/000000/star.png" height="20px"
+                        width="20px"></h6>
+                <p class="card-text" style="font-family: 'Langar', cursive;
+">{{anime.fields.Genre}}</p>
+                <p class="card-text">Total Upvotes By Users: <strong>{{anime.fields.Votes}}</strong></p>
+                {%if user.is_authenticated and request.user.is_superuser or user.is_authenticated and request.user == task.user%}
+                <button data-target="#edit_{{anime.id}}" data-toggle="modal" class="btn btn-primary">Edit</button>
+                    <a href="{% url 'delete' anime_id=anime.id %}"
+                        onclick="return confirm('Are you sure you want to delete this Anime?');"
+                        class="btn btn-danger">Delete</a>
+                {%endif%}
+                <!-- Upvote/Downvote Anime -->
+                {% if user.is_authenticated %}
+                <a href="{%url 'upvote' anime_id=anime.id%}" class="btn btn-dark" onclick="this.disabled=true;">Vote</a>
+                {%endif%}
+            </div>
+        </div>
+        <div class="modal fade" id="edit_{{anime.id}}" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Edit: {{anime.fields.Name}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'edit' anime_id=anime.id %}" method="POST">
+                            {% csrf_token %}
+                            <div class="input-group input-group-lg">
+                                <input type="text" class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-lg" value="{{anime.fields.Name}}" name="name">
+                            </div>
+                            <br>
+                            <div class="input-group input-group-lg">
+                                <input type="url" class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-lg" value="{{anime.fields.Image.0.url}}"
+                                    name="url">
+                            </div>
+                            <br>
+                            <div class="input-group input-group-lg">
+                                <input type="number" class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-lg" value="{{anime.fields.Rating}}" min='1'
+                                    max='10' name="rating">
+                            </div>
+                            <br>
+                            <div class="input-group">
+                                <textarea class="form-control" aria-label="With textarea"
+                                    name="desc">{{anime.fields.Genre}}</textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" value="Save" class="btn btn-primary">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+    <div class="modal fade" id="loginsignup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="col-md-12 modal-header" style="font-family: 'Source Sans Pro', sans-serif;">
+                    <div class="col">
+                        <div class="col-12">
+                            <div class="list-group flex-sm-row" id="list-tab" role="tablist">
+                                <a class="list-group-item list-group-item-action active" id="list-home-list"
+                                    data-toggle="list" href="#list-gen" role="tab" aria-controls="home">
+                                    <img src="https://img.icons8.com/nolan/64/login-rounded-right.png" height="15px"
+                                        width="15px">
+                                    Login
+                                </a>
+                                <a class="list-group-item list-group-item-action" id="list-profile-list"
+                                    data-toggle="list" href="#list-par" role="tab" aria-controls="profile"><img
+                                        src="https://img.icons8.com/color/48/000000/add-user-male--v1.png" height="15px"
+                                        width="15px">Register</a>
+                            </div>
+                        </div>
+                        <div class="list-group flex-sm-row p-3 modal-body">
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade show active" id="list-gen" role="tabpanel"
+                                    aria-labelledby="list-home-list">
+                                    <form action="{%url 'login'%}" method="POST">
+                                        {%csrf_token%}
+                                        <div class="input-group input-group-lg">
+                                            <input type="text" class="form-control" aria-label="Large"
+                                                aria-describedby="inputGroup-sizing-sm" placeholder="Username" required
+                                                name="username">
+                                        </div>
+                                        <br>
+                                        <div class="input-group input-group-lg">
+                                            <input type="password" class="form-control" aria-label="Large"
+                                                aria-describedby="inputGroup-sizing-sm" placeholder="Password"
+                                                name="password" required>
+                                        </div>
+                                        <br>
+                                        <input type="submit" value="Login" class="btn btn-success">
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade" id="list-par" role="tabpanel"
+                                    aria-labelledby="list-profile-list">
+                                    <form action="{%url 'register'%}" method="POST">
+                                        {%csrf_token%}
+                                        <div class="input-group input-group-lg">
+                                            <input type="text" class="form-control" aria-label="Large"
+                                                aria-describedby="inputGroup-sizing-sm" placeholder="Enter Username"
+                                                required name="username">
+                                        </div>
+                                        <br>
+                                        <div class="input-group input-group-lg">
+                                            <input type="text" class="form-control" aria-label="Large"
+                                                aria-describedby="inputGroup-sizing-sm"
+                                                placeholder="Enter Your FirstName" name="first_name" required>
+                                        </div>
+                                        <br>
+                                        <div class="input-group input-group-lg">
+                                            <input type="text" required name="last_name"
+                                                placeholder="Enter Your LastName" class="form-control"
+                                                aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+                                        </div>
+                                        <br>
+                                        <div class="input-group input-group-lg">
+                                            <input type="email" required name="email" placeholder="Enter Your EmailID"
+                                                class="form-control" aria-label="Large"
+                                                aria-describedby="inputGroup-sizing-sm">
+                                        </div>
+                                        <br>
+                                        <div class="input-group input-group-lg">
+                                            <input type="password" required name="password1"
+                                                placeholder="Enter Your Password" class="form-control"
+                                                aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+                                        </div>
+                                        <br>
+                                        <div class="input-group input-group-lg">
+                                            <input type="password" required name="password2"
+                                                placeholder="Confirm Password" class="form-control" aria-label="Large"
+                                                aria-describedby="inputGroup-sizing-sm">
+                                        </div>
+                                        <br>
+                                        <input type="submit" value="Register" class="btn btn-success">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+</body>
+
+</html>
