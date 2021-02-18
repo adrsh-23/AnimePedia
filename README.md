@@ -1,14 +1,27 @@
-# AnimePedia
+# **AnimePedia**
 
 ## Overview
 
+Basic Website created using django which shows all Animes and user can upvote an Anime. 
+Also new Animes can be added.Anime can be edited/deleted easily.
+
 ## Features
 
+#### Admin 
+* Admin has the ability to create,edit and delete any Animes.
+* 
 
 ## Screenshots
 
 
 ## Pending
+
+- [x] Login/Sign Up
+- [x] Exception Handling 
+- [x] Sort Animes By Name
+- [ ] Upvote
+- [x] Superuser/Admin can edit/delete/add new animes
+- [ ] Forgot Password
 
 ## Running this Project
 
@@ -42,7 +55,5 @@ Now you can run the project with this command
 ```
 python manage.py runserver
 ```
-
-**Note** if you want payments to work you will need to enter your own Stripe API keys into the `.env` file in the settings files.
 
 ---
