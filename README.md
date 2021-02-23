@@ -12,7 +12,16 @@ Also new Animes can be added.Anime can be edited/deleted easily.
 * 
 
 ## Screenshots
-
+<img src="https://github.com/adrsh-23/AnimePedia/blob/master/Assets/1.PNG" width=600px height=400px>
+<img src="https://github.com/adrsh-23/AnimePedia/blob/master/Assets/2.PNG" width=600px height=400px>
+<img src="https://github.com/adrsh-23/AnimePedia/blob/master/Assets/3.PNG" width=600px height=400px>
+<img src="https://github.com/adrsh-23/AnimePedia/blob/master/Assets/4.PNG" width=600px height=400px>
+<img src="https://github.com/adrsh-23/AnimePedia/blob/master/Assets/5.PNG" width=600px height=600px>
+<img src="https://github.com/adrsh-23/AnimePedia/blob/master/Assets/6.PNG" width=600px height=400px>
+<img src="https://github.com/adrsh-23/AnimePedia/blob/master/Assets/7.PNG" width=600px height=400px>
+<img src="https://github.com/adrsh-23/AnimePedia/blob/master/Assets/8.PNG" width=600px height=400px>
+<img src="https://github.com/adrsh-23/AnimePedia/blob/master/Assets/9.PNG" width=800px height=400px>
+<img src="https://github.com/adrsh-23/AnimePedia/blob/master/Assets/10.PNG" width=600px height=400px>
 
 ## Pending
 
