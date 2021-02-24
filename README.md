@@ -28,9 +28,7 @@ Also new Animes can be added.Anime can be edited/deleted easily.
 - [x] Login/Sign Up
 - [x] Exception Handling 
 - [x] Sort Animes By Name
-- [ ] Upvote
 - [x] Superuser/Admin can edit/delete/add new animes
-- [ ] Forgot Password
 
 ## Running this Project
 
