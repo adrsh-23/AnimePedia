@@ -2,14 +2,15 @@
 
 ## Overview
 
-Basic Website created using django which shows all Animes and user can upvote an Anime. 
-Also new Animes can be added.Anime can be edited/deleted easily.
+Basic Website created using django which shows all Animes. 
+New Animes can be added.
+Anime can be edited/deleted easily.
 
 ## Features
 
 #### Admin 
 * Admin has the ability to create,edit and delete any Animes.
-* 
+
 
 ## Screenshots
 <img src="https://github.com/adrsh-23/AnimePedia/blob/master/Assets/1.PNG" width=600px height=400px>
