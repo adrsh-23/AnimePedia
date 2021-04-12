@@ -12,7 +12,6 @@ Anime can be edited/deleted easily.
 * Admin has the ability to create,edit and delete any Animes.
 * Authentication
 * Users can order the animes by name
-* 
 
 
 ## Screenshots
